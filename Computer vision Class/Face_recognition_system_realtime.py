@@ -6,6 +6,11 @@ import os
 face_cascade = cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 # load recognizer 
+if not hasattr(cv, 'face'):
+    raise ImportError(
+        "cv2.face is unavailable. Install opencv-contrib-python in the active venv:\n"
+        "python -m pip install opencv-contrib-python"
+    )
 recognizer = cv.face.LBPHFaceRecognizer_create()
 
 # loading face cam
@@ -71,7 +76,7 @@ while True: # accessing the webcam
     for (x, y, w, h) in cam_face: # drawing faces in the frames in realtime
         face_roi_grey = grey[y: y + h, x: x + w]
         
-        if face_roi.size > 0:
+        if face_roi_grey.size > 0:
             face_resize = cv.resize(face_roi_grey, (200, 200))
 
             label, f_confidence = recognizer.predict(face_resize) 
